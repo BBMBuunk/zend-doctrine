@@ -4,23 +4,23 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <p>
-    <a class="" href="<?php echo $this->url('blog', array('action'=>'add'));?>">Add new blog</a>
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="<?php echo $this->url('blog', array('action'=>'add'));?>">Add new blog</a>
 </p>
 
-<table class="">
+<table class="mdl-data-table mdl-js-data-table">
     <tr>
-        <th class="">Title</th>
-        <th class="">Body</th>
-        <th class="">&nbsp;</th>
+        <th class="mdl-data-table__cell--non-numeric">Title</th>
+        <th class="mdl-data-table__cell--non-numeric">Body</th>
+        <th class="mdl-data-table__cell--non-numeric">&nbsp;</th>
     </tr>
     <?php foreach ($this->blog as $blog) : ?>
         <tr>
             <td><?php echo $this->escapeHtml($blog->title);?></td>
             <td><?php echo $this->escapeHtml($blog->body);?></td>
             <td>
-                <a class="" href="<?php echo $this->url('blog',
+                <a class="mdl-button mdl-js-button mdl-button--primary" href="<?php echo $this->url('blog',
                     array('action'=>'edit', 'id' => $blog->id));?>">Edit</a>
-                <a class="" href="<?php echo $this->url('blog',
+                <a class="mdl-button mdl-js-button mdl-button--accent" href="<?php echo $this->url('blog',
                     array('action'=>'delete', 'id' => $blog->id));?>">Delete</a>
             </td>
         </tr>
