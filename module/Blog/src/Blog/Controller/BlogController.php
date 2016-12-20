@@ -7,20 +7,29 @@
  */
 
 namespace Blog\Controller;
-
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Blog\Model\Blog;
+use Blog\Entity\Blog;
 use Blog\Form\BlogForm;
 
-class BlogController extends AbstractActionController {
 
-    protected $blogTable;
+class BlogController extends AbstractActionController
+{
+    protected $em;
+
+    public function getEntityManager()
+    {
+        if (null === $this->em) {
+            $this->em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        }
+        return $this->em;
+    }
 
     public function indexAction()
     {
         return new ViewModel(array(
-            'blog' => $this->getBlogTable()->fetchAll(),
+            'blog' => $this->getEntityManager()->getRepository('Blog\Entity\Blog')->findAll(),
         ));
     }
 
@@ -34,10 +43,13 @@ class BlogController extends AbstractActionController {
             $blog = new Blog();
             $form->setInputFilter($blog->getInputFilter());
             $form->setData($request->getPost());
+
             if ($form->isValid()) {
                 $blog->exchangeArray($form->getData());
-                $this->getBlogTable()->saveBlog($blog);
-                // Redirect to list of blogs
+                $this->getEntityManager()->persist($blog);
+                $this->getEntityManager()->flush();
+
+                // Redirect to list blogs
                 return $this->redirect()->toRoute('blog');
             }
         }
@@ -53,12 +65,8 @@ class BlogController extends AbstractActionController {
             ));
         }
 
-        // Get the Blog with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
-        try {
-            $blog = $this->getBlogTable()->getBlog($id);
-        }
-        catch (\Exception $ex) {
+        $blog = $this->getEntityManager()->find('Blog\Entity\Blog', $id);
+        if (!$blog) {
             return $this->redirect()->toRoute('blog', array(
                 'action' => 'index'
             ));
@@ -74,7 +82,7 @@ class BlogController extends AbstractActionController {
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
-                $this->getBlogTable()->saveBlog($blog);
+                $this->getEntityManager()->flush();
 
                 // Redirect to list of albums
                 return $this->redirect()->toRoute('blog');
@@ -100,7 +108,11 @@ class BlogController extends AbstractActionController {
 
             if ($del == 'Yes') {
                 $id = (int) $request->getPost('id');
-                $this->getBlogTable()->deleteBlog($id);
+                $blog = $this->getEntityManager()->find('Blog\Entity\Blog', $id);
+                if ($blog) {
+                    $this->getEntityManager()->remove($blog);
+                    $this->getEntityManager()->flush();
+                }
             }
 
             // Redirect to list of albums
@@ -109,16 +121,7 @@ class BlogController extends AbstractActionController {
 
         return array(
             'id'    => $id,
-            'blog' => $this->getBlogTable()->getBlog($id)
+            'blog' => $this->getEntityManager()->find('Blog\Entity\Blog', $id)
         );
-    }
-
-    public function getBlogTable()
-    {
-        if (!$this->blogTable) {
-            $sm = $this->getServiceLocator();
-            $this->blogTable = $sm->get('Blog\Model\BlogTable');
-        }
-        return $this->blogTable;
     }
 } 

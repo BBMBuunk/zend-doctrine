@@ -1,7 +1,7 @@
 <?php
 namespace Blog;
 
-use Blog\Model\Blog;
+use Blog\Entity\Blog;
 use Blog\Model\BlogTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
