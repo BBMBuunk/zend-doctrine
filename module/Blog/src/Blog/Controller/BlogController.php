@@ -7,11 +7,12 @@
  */
 
 namespace Blog\Controller;
-use Doctrine\ORM\EntityManager;
+
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Blog\Entity\Blog;
 use Blog\Form\BlogForm;
+use Doctrine\ORM\EntityManager;
 
 
 class BlogController extends AbstractActionController
@@ -123,5 +124,14 @@ class BlogController extends AbstractActionController
             'id'    => $id,
             'blog' => $this->getEntityManager()->find('Blog\Entity\Blog', $id)
         );
+    }
+
+    public function getBlogTable()
+    {
+        if (!$this->blogTable) {
+            $sm = $this->getServiceLocator();
+            $this->blogTable = $sm->get('Blog\Model\BlogTable');
+        }
+        return $this->blogTable;
     }
 } 
