@@ -6,19 +6,66 @@
  * Time: 20:16
  */
 
-namespace Blog\Model;
+namespace Blog\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
 
-
+/**
+ * A blog.
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="blogposts")
+ * @property string $title
+ * @property string $body
+ * @property int $id
+ */
 class Blog implements InputFilterAwareInterface {
-    public $id;
-    public $title;
-    public $body;
+
     protected $inputFilter;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer");
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $title;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $body;
+
+    /**
+     * Magic getter to expose protected properties.
+     *
+     * @param string $property
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic setter to save protected properties.
+     *
+     * @param string $property
+     * @param mixed $value
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
 
     public function exchangeArray($data)
     {
