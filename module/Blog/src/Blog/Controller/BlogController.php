@@ -37,7 +37,7 @@ class BlogController extends AbstractActionController
         $repository = $entityManager->getRepository('Blog\Entity\Blog');
         $adapter = new DoctrineAdapter(new ORMPaginator($repository->createQueryBuilder('user')));
         $paginator = new Paginator($adapter);
-        $paginator->setDefaultItemCountPerPage(10);
+        $paginator->setDefaultItemCountPerPage(5);
 
         $page = (int)$this->params()->fromQuery('page');
         if($page) $paginator->setCurrentPageNumber($page);
