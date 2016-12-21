@@ -1,6 +1,8 @@
 ZendSkeletonApplication
 =======================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee3025deea394791869dea8c9dfef147)](https://www.codacy.com/app/bbmbuunk_2/zend-doctrine?utm_source=github.com&utm_medium=referral&utm_content=BBMBuunk/zend-doctrine&utm_campaign=badger)
+
 Introduction
 ------------
 This is a simple, skeleton application using the ZF2 MVC layer and module
