@@ -33,6 +33,19 @@ return array(
                     ),
                 ),
             ),
+            'paginator' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/blog[/page/:page]',
+                    'constraints' => array(
+                        'page' => '[0-9]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Blog\Controller\Blog',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
 

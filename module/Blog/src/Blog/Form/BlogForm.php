@@ -45,6 +45,7 @@ class BlogForm extends Form {
             'name' => 'submit',
             'type' => 'Submit',
             'attributes' => array(
+                'class' => 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent',
                 'value' => 'Add Blog',
                 'id' => 'submitbutton',
             ),
