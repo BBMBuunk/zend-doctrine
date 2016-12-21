@@ -7,11 +7,15 @@
  */
 
 namespace Blog\Controller;
-use Doctrine\ORM\EntityManager;
+
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Paginator\Paginator;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Blog\Entity\Blog;
 use Blog\Form\BlogForm;
+use Doctrine\ORM\EntityManager;
 
 
 class BlogController extends AbstractActionController
@@ -28,9 +32,18 @@ class BlogController extends AbstractActionController
 
     public function indexAction()
     {
-        return new ViewModel(array(
-            'blog' => $this->getEntityManager()->getRepository('Blog\Entity\Blog')->findAll(),
-        ));
+        $view =  new ViewModel();
+        $entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+        $repository = $entityManager->getRepository('Blog\Entity\Blog');
+        $adapter = new DoctrineAdapter(new ORMPaginator($repository->createQueryBuilder('user')));
+        $paginator = new Paginator($adapter);
+        $paginator->setDefaultItemCountPerPage(10);
+
+        $page = (int)$this->params()->fromQuery('page');
+        if($page) $paginator->setCurrentPageNumber($page);
+
+        $view->setVariable('paginator',$paginator);
+        return $view->setVariable('paginator',$paginator);
     }
 
     public function addAction()
@@ -123,5 +136,14 @@ class BlogController extends AbstractActionController
             'id'    => $id,
             'blog' => $this->getEntityManager()->find('Blog\Entity\Blog', $id)
         );
+    }
+
+    public function getBlogTable()
+    {
+        if (!$this->blogTable) {
+            $sm = $this->getServiceLocator();
+            $this->blogTable = $sm->get('Blog\Model\BlogTable');
+        }
+        return $this->blogTable;
     }
 } 

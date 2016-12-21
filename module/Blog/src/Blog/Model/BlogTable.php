@@ -27,6 +27,7 @@ class BlogTable {
     public function getBlog($id)
     {
         $id  = (int) $id;
+
         $rowset = $this->tableGateway->select(array('id' => $id));
         $row = $rowset->current();
         if (!$row) {
