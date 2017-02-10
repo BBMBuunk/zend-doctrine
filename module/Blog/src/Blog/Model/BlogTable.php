@@ -36,7 +36,7 @@ class BlogTable {
         return $row;
     }
 
-    public function saveBlog(Blog $blog)
+    public function saveBlog($blog)
     {
         $data = array(
             'title' => $blog->title,
