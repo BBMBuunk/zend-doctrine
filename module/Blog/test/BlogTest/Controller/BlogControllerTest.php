@@ -16,7 +16,7 @@ class BlogControllerTest extends AbstractHttpControllerTestCase
         parent::setUp();
     }
 
-    public function testIndexActionCanBeAccessed()
+    public function testIndexAction()
     {
         $this->dispatch('/blog');
         $this->assertResponseStatusCode(200);
@@ -27,11 +27,27 @@ class BlogControllerTest extends AbstractHttpControllerTestCase
         $this->assertMatchedRouteName('paginator');
     }
 
-    public function testSaveBlog()
+    public function testAddAction()
     {
         $this->dispatch('/blog/add', 'POST',
             array(
                 'title' => 'PHPUnit',
+                'body' => 'Hoe awesome is een UNIT test?'));
+    }
+
+    public function testEditAction()
+    {
+        $this->dispatch('/blog/edit', 'POST',
+            array(
+                'id' => '',
+                'body' => 'Hoe awesome is een UNIT test?'));
+    }
+
+    public function testDeleteAction()
+    {
+        $this->dispatch('/blog/delete', 'POST',
+            array(
+                'id' => '',
                 'body' => 'Hoe awesome is een UNIT test?'));
     }
 
